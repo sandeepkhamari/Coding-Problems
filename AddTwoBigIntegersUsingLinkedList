@@ -1,0 +1,83 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        
+        int carry=0, data;
+        struct ListNode *result, *temp1=l1, *temp2=l2, *ret, *prev;
+        
+        if(!l1){
+           return l2; 
+        }
+        if(!l2){
+           return l1;
+        }
+        
+        // result will be saved in one of the input linked list with bigger length.
+        while(temp1 && temp2){
+            temp1= temp1->next;
+            temp2= temp2->next;
+        }
+        
+        if(!temp1){
+           result= l2;
+        }
+        else{
+           result= l1;
+        }
+        
+        ret= result;
+        
+        //Add the two numbers until one of the list is exhausted.
+        while(l1 && l2){
+            data= l1->val + l2->val + carry;
+            
+            carry= data / 10;
+            data= data % 10;
+            
+            result->val= data;
+            
+            l1= l1->next;
+            l2= l2->next;
+            prev= result;
+            result= result->next;
+        }
+        
+        //If both the lists are of same length.
+        if(carry!=0 && !result){
+            struct ListNode *newNode = new struct ListNode;
+            newNode->next= NULL;
+            newNode->val= carry;
+            prev->next= newNode;
+            return ret;
+        }
+        
+        //If one list is longer than the other.
+        if(carry!=0 && result){
+            while(result && carry!=0){
+               data= result->val + carry;
+               result->val= data % 10;
+               carry= data / 10;
+               prev= result;
+               result= result->next;
+            }
+            if(carry!=0){
+               struct ListNode *node = new struct ListNode;
+               node->next= NULL;
+               node->val= carry;
+               prev->next= node;
+            }
+        }
+        
+        return ret;
+    }
+};
