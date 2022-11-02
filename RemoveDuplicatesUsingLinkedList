@@ -1,0 +1,97 @@
+/******************************************************************************
+
+*******************************************************************************/
+#include <iostream>
+#include <unordered_set>
+
+using namespace std;
+
+struct Node{
+    int data;
+    struct Node *next;
+};
+
+struct Node* getNode(int data){
+    struct Node *newNode= (struct Node*)malloc(sizeof(struct Node));
+    newNode->data= data;
+    newNode->next= NULL;
+    return newNode;
+}
+
+void deleteNode(struct Node *head, struct Node *temp){
+    struct Node *prev=NULL;
+    std::cout<<"head= "<<head->data<<"temp= "<<temp->data<<"\n";
+    while(head){
+        if(head==temp){
+          std::cout<<"matched"<<std::endl;
+          prev->next= temp->next;
+          temp->next= NULL;
+          free(temp);
+        }
+        prev=head;
+        head=head->next;
+    }
+}
+
+int main()
+{
+    std::cout<<"INFO:: Started the function."<<std::endl;
+    
+    std::unordered_set<int> numbers_seen;
+    
+    //example entries.
+    struct Node *head= getNode(1);
+    head->next= getNode(4);
+    head->next->next= getNode(5);
+    head->next->next->next= getNode(2);
+    head->next->next->next->next= getNode(1);
+    head->next->next->next->next->next= getNode(5);
+    head->next->next->next->next->next->next= getNode(1);
+    head->next->next->next->next->next->next->next= getNode(3);
+    
+    if(head==NULL){
+      std::cout<<"WARN:: The list is empty."<<std::endl;
+      std::cout<<"INFO:: Closing the process."<<std::endl;
+      return 0;
+    }
+    
+    //print the original list.
+    std::cout<<"INFO:: The original list is:"<<std::endl;
+    struct Node *temp=head, *save_temp;
+    while(temp){
+        std::cout<<temp->data<<"->";
+        temp= temp->next;
+    }
+    std::cout<<std::endl;
+    
+    //If it is already seen, delete the next occurances.
+    //else add to the hashset.
+    temp=head;
+    while(temp){
+        if(numbers_seen.find(temp->data)!=numbers_seen.end()){
+            std::cout<<"INFO:: Erasing: "<<temp->data<<std::endl;
+            save_temp=temp->next;
+            deleteNode(head,temp);
+            temp=save_temp;
+        }
+        else{
+            std::cout<<"INFO:: Inserting: "<<temp->data<<std::endl;
+            numbers_seen.insert(temp->data);
+            temp= temp->next;
+        }
+    }
+    
+    //print the result list.
+    std::cout<<"INFO:: The result list is:"<<std::endl;
+    
+    temp=head;
+    while(temp){
+        std::cout<<temp->data<<"->";
+        temp= temp->next;
+    }
+    std::cout<<std::endl;
+    
+    std::cout<<"INFO:: End of the function."<<std::endl;
+    
+    return 0;
+}
