@@ -1,0 +1,67 @@
+#include <iostream>
+
+using namespace std;
+
+struct Node{
+    struct Node *next;
+    int data;
+};
+
+struct Node* newNode(int data){
+    struct Node *node= (struct Node*) malloc(sizeof(struct Node));
+    node->data= data;
+    return node;
+}
+
+void printLL(struct Node *head){
+    while(head){
+        cout<<head->data<<"->";
+        head= head->next;
+    }
+    cout<<endl;
+}
+
+struct Node* reverse(struct Node *head){
+    struct Node *prev= NULL;
+    struct Node *curr= head, *next=NULL;
+
+    while(curr){
+      next= curr->next;
+      curr->next= prev;
+      prev= curr;
+      curr=next;
+    }
+    return prev;
+}
+
+struct Node* recCall(struct Node *head){
+		struct Node *temp1= head, *temp2;
+		if(!head || !head->next){
+			return head;
+		}
+		temp2= temp1->next;
+		head= temp2->next;
+		temp2->next= temp1;
+		temp1->next= recCall(head);
+
+		return temp2;
+}
+
+int main()
+{
+    struct Node *head;
+    head= newNode(10);
+    head->next= newNode(20);
+    head->next->next= newNode(30);
+    head->next->next->next= newNode(40);
+    head->next->next->next->next= newNode(50);
+    head->next->next->next->next->next= NULL;
+    
+    printLL(head);
+    
+    head= recCall(head);
+    
+    printLL(head);
+    
+    return 0;
+}
