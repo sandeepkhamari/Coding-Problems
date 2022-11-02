@@ -1,0 +1,76 @@
+/******************************************************************************
+      ~~~~~Remove duplicates from an unsorted list.~~~~~~
+      
+      TIME COMPLEXITY:
+      This function takes O(n) as searching in unordered_set takes O(1)
+      and it is done for all the elements of the list. There are n elements, for which
+      it would take O(n). Ignores inserting into unordered_set as it takes O(1) and Erasing
+      from list takes O(1).
+      Overall time complexity = O(n)
+      
+      SPACE COMPLEXITY:
+      This takes O(n) for storing n elements in the list. And O(n) for unordered_set
+      in the worst case if all the elements are unique. 
+      Overall Space complexity = O(n)
+*******************************************************************************/
+#include <iostream>
+#include <unordered_set>
+#include <forward_list>
+#include <algorithm>
+#include <iterator>
+#include <list>
+
+int main()
+{
+    std::cout<<"INFO:: Started the function."<<std::endl;
+    
+    std::unordered_set<int> numbers_seen;
+    std::list<int> numberList;
+    
+    //example entries.
+    numberList.push_back(1);
+    numberList.push_back(4);
+    numberList.push_back(5);
+    numberList.push_back(2);
+    numberList.push_back(1);
+    numberList.push_back(5);
+    numberList.push_back(1);
+    numberList.push_back(3);
+    
+    if(numberList.empty()){
+      std::cout<<"WARN:: The list is empty."<<std::endl;
+      std::cout<<"INFO:: Closing the process."<<std::endl;
+      return 0;
+    }
+    
+    //print the original list.
+    std::cout<<"INFO:: The original list is:"<<std::endl;
+    for_each(numberList.begin(), numberList.end(), [](auto &element){
+        std::cout<<element<<"->";
+    });
+    std::cout<<std::endl;
+    
+    //If it is already seen, delete the next occurances.
+    //else add to the hashset.
+    for(std::list<int>::iterator it=numberList.begin(); it!=numberList.end();){
+        if(numbers_seen.find(*it)!=numbers_seen.end()){
+            std::cout<<"INFO:: Erasing: "<<*it<<std::endl;
+            it= numberList.erase(it);
+        }
+        else{
+            std::cout<<"INFO:: Inserting: "<<*it<<std::endl;
+            numbers_seen.insert(*it);
+            it++;
+        }
+    }
+    
+    //print the result list.
+    std::cout<<"INFO:: The result list is:"<<std::endl;
+    std::for_each(numberList.begin(), numberList.end(), [](auto &element){
+        std::cout<<element<<"->";
+    });
+    std::cout<<std::endl;
+    
+    std::cout<<"INFO:: End of the function."<<std::endl;
+    return 0;
+}
